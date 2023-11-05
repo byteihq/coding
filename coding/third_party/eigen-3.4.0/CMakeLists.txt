@@ -475,34 +475,6 @@ endif()
 
 install(DIRECTORY Eigen DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
-
-option(EIGEN_BUILD_DOC "Enable creation of Eigen documentation" ON)
-if(EIGEN_BUILD_DOC)
-  add_subdirectory(doc EXCLUDE_FROM_ALL)
-endif()
-
-
-option(BUILD_TESTING "Enable creation of Eigen tests." ON)
-if(BUILD_TESTING)
-  include(EigenConfigureTesting)
-
-  if(EIGEN_LEAVE_TEST_IN_ALL_TARGET)
-    add_subdirectory(test) # can't do EXCLUDE_FROM_ALL here, breaks CTest
-  else()
-    add_subdirectory(test EXCLUDE_FROM_ALL)
-  endif()
-
-  add_subdirectory(failtest)
-endif()
-
-if(EIGEN_LEAVE_TEST_IN_ALL_TARGET)
-  add_subdirectory(blas)
-  add_subdirectory(lapack)
-else()
-  add_subdirectory(blas EXCLUDE_FROM_ALL)
-  add_subdirectory(lapack EXCLUDE_FROM_ALL)
-endif()
-
 # add SYCL
 option(EIGEN_TEST_SYCL "Add Sycl support." OFF)
 option(EIGEN_SYCL_TRISYCL "Use the triSYCL Sycl implementation (ComputeCPP by default)." OFF)
@@ -533,13 +505,6 @@ if(EIGEN_TEST_SYCL)
   endif()
 endif()
 
-add_subdirectory(unsupported)
-
-add_subdirectory(demos EXCLUDE_FROM_ALL)
-
-# must be after test and unsupported, for configuring buildtests.in
-add_subdirectory(scripts EXCLUDE_FROM_ALL)
-
 # TODO: consider also replacing EIGEN_BUILD_BTL by a custom target "make btl"?
 if(EIGEN_BUILD_BTL)
   add_subdirectory(bench/btl EXCLUDE_FROM_ALL)
@@ -547,12 +512,6 @@ endif()
 
 if(NOT WIN32)
   add_subdirectory(bench/spbench EXCLUDE_FROM_ALL)
-endif()
-
-configure_file(scripts/cdashtesting.cmake.in cdashtesting.cmake @ONLY)
-
-if(BUILD_TESTING)
-  ei_testing_print_summary()
 endif()
 
 message(STATUS "")
